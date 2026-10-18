@@ -3,7 +3,14 @@
 Zones semi-transparentes pour organiser le bureau Windows, dans l'esprit de Fences.
 Electron + React + Vite.
 
-## Lancer
+## Télécharger
+
+**[⬇ DeskRanger-Setup-0.1.0.exe](https://github.com/Osiasodg/DeskRanger/releases/latest)** (Windows 10 / 11, 64 bits)
+
+Au premier lancement, Windows peut afficher « Windows a protégé votre ordinateur » car l'application
+n'est pas signée : cliquez sur **Informations complémentaires** → **Exécuter quand même**.
+
+## Lancer depuis le code source
 
 ```bash
 npm install
