@@ -22,6 +22,18 @@ export const THEMES = [
   { accent: '#e5e7eb', color: '#27272a' },
 ];
 
+// Catégories de « Ranger le bureau » pour ce qu'aucune zone ne réclame.
+// La dernière (sans règle) reçoit tout le reste : rien n'est laissé de côté.
+export const SORT_CATEGORIES = [
+  { title: 'Applications', rules: '.lnk .exe .url .appref-ms', theme: THEMES[2] },
+  { title: 'Dossiers', rules: 'dossier', theme: THEMES[4] },
+  { title: 'Documents', rules: '.pdf .doc .docx .xls .xlsx .ppt .pptx .odt .ods .odp .txt .md .csv .rtf', theme: THEMES[0] },
+  { title: 'Images', rules: '.png .jpg .jpeg .gif .bmp .webp .svg .heic', theme: THEMES[3] },
+  { title: 'Médias', rules: '.mp3 .wav .flac .m4a .mp4 .mkv .avi .mov', theme: THEMES[6] },
+  { title: 'Archives', rules: '.zip .rar .7z .tar .gz', theme: THEMES[5] },
+  { title: 'Autres', rules: '', theme: THEMES[7] },
+];
+
 export function createItem(path) {
   return { id: uid(), path, name: null };
 }

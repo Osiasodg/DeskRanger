@@ -4,7 +4,7 @@ import { pathsFromDrop } from './lib/drag.js';
 import { fenceGeometry, findFreeSpot, snap } from './lib/geometry.js';
 import { baseName, displayName, extOf } from './lib/paths.js';
 import { activeProfile, useAppState } from './state/useAppState.js';
-import { createFence, createItem } from './state/defaults.js';
+import { createFence, createItem, SORT_CATEGORIES } from './state/defaults.js';
 import { useClickThrough } from './hooks/useClickThrough.js';
 import { useToasts } from './hooks/useToasts.js';
 import Fence from './components/Fence.jsx';
@@ -179,30 +179,54 @@ export default function App() {
     });
   };
 
+  // Range tout le bureau : d'abord dans les zones dont une règle correspond, puis le reste
+  // dans des zones par catégorie (réutilisées si une zone porte déjà ce nom, créées sinon).
   const autoSort = async () => {
-    const rulesFences = profile.fences
-      .filter((f) => f.type === 'items' && f.rules.trim())
+    const itemFences = profile.fences.filter((f) => f.type === 'items');
+    const ruled = itemFences
+      .filter((f) => f.rules.trim())
       .map((f) => ({ fence: f, tokens: ruleTokens(f.rules) }));
-    if (!rulesFences.length) {
-      toast('Ajoutez des règles à vos zones (⋯ → Règles de rangement) pour ranger automatiquement.');
-      return;
-    }
-    const known = new Set(profile.fences.flatMap((f) => f.items.map((it) => it.path.toLowerCase())));
-    const plan = new Map();
+    const byTitle = new Map(itemFences.map((f) => [f.title.trim().toLowerCase(), f]));
+    const known = new Set(itemFences.flatMap((f) => f.items.map((it) => it.path.toLowerCase())));
+
+    const toExisting = new Map(); // id de zone → chemins
+    const toCreate = new Map();   // catégorie → chemins
     for (const entry of await api.desktopFiles()) {
       if (known.has(entry.path.toLowerCase())) continue;
-      const match = rulesFences.find(({ tokens }) => matchesRules(entry, tokens));
-      if (!match) continue;
-      plan.set(match.fence.id, [...(plan.get(match.fence.id) ?? []), entry.path]);
+      const match = ruled.find(({ tokens }) => matchesRules(entry, tokens));
+      if (match) {
+        toExisting.set(match.fence.id, [...(toExisting.get(match.fence.id) ?? []), entry.path]);
+        continue;
+      }
+      const category = SORT_CATEGORIES.find((c) => !c.rules || matchesRules(entry, ruleTokens(c.rules)));
+      const existing = byTitle.get(category.title.toLowerCase());
+      if (existing) toExisting.set(existing.id, [...(toExisting.get(existing.id) ?? []), entry.path]);
+      else toCreate.set(category, [...(toCreate.get(category) ?? []), entry.path]);
     }
+
     let count = 0;
-    for (const [fenceId, paths] of plan) {
+    for (const [fenceId, paths] of toExisting) {
       actions.addItems(fenceId, paths);
       count += paths.length;
     }
+    // Les nouvelles zones sont placées l'une après l'autre dans les espaces libres.
+    const placed = profile.fences.map(fenceGeometry);
+    for (const [category, paths] of toCreate) {
+      const fence = createFence('items', {
+        title: category.title, rules: category.rules, ...category.theme, items: paths.map(createItem),
+      });
+      const geo = fenceGeometry(fence);
+      const spot = findFreeSpot(placed, geo.w, geo.h);
+      placed.push({ ...geo, ...spot });
+      actions.addFence({ ...fence, ...spot });
+      count += paths.length;
+    }
+
+    const zones = toExisting.size + toCreate.size;
     toast(count
-      ? `${count} élément${count > 1 ? 's' : ''} rangé${count > 1 ? 's' : ''} dans ${plan.size} zone${plan.size > 1 ? 's' : ''}`
-      : 'Rien de nouveau à ranger sur le bureau');
+      ? `${count} élément${count > 1 ? 's' : ''} rangé${count > 1 ? 's' : ''} dans ${zones} zone${zones > 1 ? 's' : ''}`
+        + (toCreate.size ? ` (${toCreate.size} créée${toCreate.size > 1 ? 's' : ''})` : '')
+      : 'Tout le bureau est déjà rangé');
   };
 
   // ---- menus contextuels -------------------------------------------------
@@ -341,6 +365,7 @@ export default function App() {
           creating={creating}
           setCreating={setCreating}
           onCreate={(overrides) => newFence('items', overrides)}
+          onAutoSort={autoSort}
           onSearch={() => setSearchOpen(true)}
           onEdit={() => setEditMode(true)}
         />
