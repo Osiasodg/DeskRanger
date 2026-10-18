@@ -32,7 +32,7 @@ export default function Dock({ state, actions, openMenu, prompt, confirm, onNewF
     { label: `${check(settings.openAtLogin)}Lancer avec Windows`, onClick: () => actions.updateSettings({ openAtLogin: !settings.openAtLogin }) },
     '-',
     { label: 'Réindexer la recherche', onClick: () => actions.reindex() },
-    { label: 'Quitter Zones', danger: true, onClick: () => actions.quit() },
+    { label: 'Quitter DeskRanger', danger: true, onClick: () => actions.quit() },
   ]);
 
   return (

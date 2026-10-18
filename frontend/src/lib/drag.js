@@ -1,9 +1,9 @@
 import { api } from './api.js';
 
 /** Élément déjà rangé dans une zone (déplacement entre zones). */
-export const ITEM_MIME = 'application/x-zones-item';
+export const ITEM_MIME = 'application/x-deskranger-item';
 /** Fichier affiché par une zone Dossier ou Récents (copie d'un lien vers une zone). */
-export const ENTRY_MIME = 'application/x-zones-entry';
+export const ENTRY_MIME = 'application/x-deskranger-entry';
 
 /** Chemins déposés : depuis une zone Dossier/Récents ou depuis l'Explorateur Windows. */
 export function pathsFromDrop(e) {

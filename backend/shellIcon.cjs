@@ -12,22 +12,22 @@ if (process.platform === 'win32') {
     const user32 = koffi.load('user32.dll');
     const gdi32 = koffi.load('gdi32.dll');
 
-    const GUID = koffi.struct('ZonesGUID', {
+    const GUID = koffi.struct('DeskRangerGUID', {
       Data1: 'uint32_t', Data2: 'uint16_t', Data3: 'uint16_t', Data4: koffi.array('uint8_t', 8),
     });
-    const SHFILEINFOW = koffi.struct('ZonesSHFILEINFOW', {
+    const SHFILEINFOW = koffi.struct('DeskRangerSHFILEINFOW', {
       hIcon: 'intptr_t',
       iIcon: 'int',
       dwAttributes: 'uint32_t',
       szDisplayName: koffi.array('uint16_t', 260),
       szTypeName: koffi.array('uint16_t', 80),
     });
-    const BITMAPINFO = koffi.struct('ZonesBITMAPINFO', {
+    const BITMAPINFO = koffi.struct('DeskRangerBITMAPINFO', {
       biSize: 'uint32_t', biWidth: 'int32_t', biHeight: 'int32_t', biPlanes: 'uint16_t', biBitCount: 'uint16_t',
       biCompression: 'uint32_t', biSizeImage: 'uint32_t', biXPelsPerMeter: 'int32_t', biYPelsPerMeter: 'int32_t',
       biClrUsed: 'uint32_t', biClrImportant: 'uint32_t', bmiColors: koffi.array('uint8_t', 4),
     });
-    const GetIconProto = koffi.proto('__stdcall', 'ZonesImageListGetIcon', 'int32_t',
+    const GetIconProto = koffi.proto('__stdcall', 'DeskRangerImageListGetIcon', 'int32_t',
       ['void *', 'int', 'uint32_t', koffi.out(koffi.pointer('intptr_t'))]);
 
     api = {
@@ -54,7 +54,7 @@ if (process.platform === 'win32') {
         ['intptr_t', 'intptr_t', 'uint32_t', 'uint32_t', 'void *', koffi.inout(koffi.pointer(BITMAPINFO)), 'uint32_t']),
     };
   } catch (err) {
-    console.warn('[zones] icônes système indisponibles :', err.message);
+    console.warn('[deskranger] icônes système indisponibles :', err.message);
     api = null;
   }
 }

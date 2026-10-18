@@ -1,8 +1,10 @@
 {
-  "name": "zones-bureau",
-  "productName": "Zones",
+  "name": "deskranger",
+  "productName": "DeskRanger",
   "version": "0.1.0",
   "description": "Zones semi-transparentes pour organiser le bureau Windows (raccourcis, dossiers, recherche).",
+  "author": "Saïd Osias Ouedraogo",
+  "repository": "https://github.com/Osiasodg/DeskRanger",
   "private": true,
   "type": "module",
   "main": "backend/main.cjs",
@@ -26,8 +28,8 @@
     "wait-on": "^8.0.1"
   },
   "build": {
-    "appId": "fr.zones.bureau",
-    "productName": "Zones",
+    "appId": "com.osiasodg.deskranger",
+    "productName": "DeskRanger",
     "directories": {
       "output": "release"
     },
@@ -40,11 +42,15 @@
       "node_modules/koffi/**"
     ],
     "win": {
-      "target": "nsis"
+      "target": "nsis",
+      "icon": "build/icon.png"
     },
     "nsis": {
       "oneClick": false,
-      "allowToChangeInstallationDirectory": true
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": false,
+      "createStartMenuShortcut": true,
+      "shortcutName": "DeskRanger"
     }
   },
   "allowScripts": {

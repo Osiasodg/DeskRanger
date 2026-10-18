@@ -25,7 +25,7 @@ async function loadIcon(p) {
     const url = shellIcon(p);
     if (url) return url;
   } catch (err) {
-    console.warn('[zones] icône système en échec :', p, err.message);
+    console.warn('[deskranger] icône système en échec :', p, err.message);
   }
   // app.getFileIcon donne une icône de disque pour les dossiers : l'interface dessine la sienne.
   const stat = await fsp.stat(p).catch(() => null);

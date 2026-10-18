@@ -18,7 +18,7 @@ export default function Welcome({ onClose }) {
   return (
     <div className="modal-backdrop hit">
       <div className="panel welcome">
-        <h2>Bienvenue dans Zones</h2>
+        <h2>Bienvenue dans DeskRanger</h2>
         <p>Créez vos zones avec le bouton <strong>+</strong> en bas à droite, puis glissez-y vos applis,
           fichiers et dossiers. Déplacez une zone par son titre, renommez-la d’un double-clic.</p>
         <ul className="shortcut-list">
@@ -30,7 +30,7 @@ export default function Welcome({ onClose }) {
           ))}
         </ul>
         <p className="muted">Astuce : en mode édition, déposez des fichiers dans le vide pour créer une zone,
-          et utilisez « Ranger le bureau » pour classer automatiquement vos icônes. L’icône Zones dans la zone
+          et utilisez « Ranger le bureau » pour classer automatiquement vos icônes. L’icône DeskRanger dans la zone
           de notification donne accès à tout.</p>
         <div className="dialog-actions">
           <button className="btn primary" autoFocus onClick={onClose}>C’est parti</button>

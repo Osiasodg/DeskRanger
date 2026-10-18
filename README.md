@@ -37,6 +37,9 @@ Sous Windows, on peut aussi double-cliquer sur `lancer.bat`.
 - **Sélection multiple** : Ctrl+clic, Maj+clic, lasso (glisser dans le vide d'une zone), Ctrl+A.
   Puis Suppr (retirer), Entrée (ouvrir), glisser vers une autre zone, ou clic droit.
 - **Vider une zone** : clic droit sur la zone ou ⋯ → « Vider la zone » (les fichiers restent intacts).
+- **Reste visible avec Win+D** (« Afficher le bureau ») : la fenêtre est rattachée au bureau Windows.
+- **Masquer les icônes Windows du bureau** (⚙ en mode édition) : seules les zones restent ;
+  les icônes réapparaissent quand on quitte DeskRanger.
 - Vraies icônes Windows en haute définition, identiques à l'Explorateur (`backend/shellIcon.cjs`),
   et vignettes pour les images.
 
@@ -64,7 +67,7 @@ backend/                  processus Electron (Node.js)
   shellIcon.cjs           icônes Windows haute définition
   files.cjs               ouverture, listing et surveillance de dossiers, fichiers récents
   search.cjs              index de recherche (menu Démarrer + dossiers personnels)
-  store.cjs               sauvegarde de la disposition (%APPDATA%/Zones/layout.json)
+  store.cjs               sauvegarde de la disposition (%APPDATA%/DeskRanger/layout.json)
 frontend/                 interface React (Vite)
   index.html
   src/
@@ -82,10 +85,6 @@ qu'au-dessus des éléments marqués `.hit`.
 
 ## Limites connues
 
-- **Win+D** (afficher le bureau) masque aussi les zones. Fences s'intègre à la couche « WorkerW »
-  du bureau pour l'éviter : c'est la prochaine étape possible via koffi.
-- Les icônes d'origine du bureau restent visibles sous les zones. Pour les cacher :
-  clic droit sur le bureau → Affichage → décocher « Afficher les icônes du bureau ».
 - Écran principal uniquement pour l'instant.
 - Le flou d'arrière-plan du fond d'écran n'est pas possible par zone avec Electron :
   on joue sur l'opacité et l'ombre.

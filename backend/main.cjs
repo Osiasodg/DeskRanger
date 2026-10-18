@@ -14,6 +14,7 @@ const SHORTCUT_CANDIDATES = {
 };
 const SHORTCUTS = {};
 const REINDEX_EVERY_MS = 15 * 60 * 1000;
+const DESKTOP_REATTACH_MS = 5000;
 
 let win = null;
 let tray = null;
@@ -66,8 +67,11 @@ function createWindow() {
   win.webContents.setWindowOpenHandler(() => ({ action: 'deny' }));
 
   win.once('ready-to-show', () => {
+    desktop.attachToDesktop(win);
     win.showInactive();
     if (!alwaysOnTop) desktop.sendToBack(win);
+    // Si l'Explorateur redémarre, le bureau change de fenêtre : on s'y rattache à nouveau.
+    setInterval(() => desktop.attachToDesktop(win), DESKTOP_REATTACH_MS);
   });
   // Quand on clique ailleurs, les zones retournent derrière les autres fenêtres.
   win.on('blur', () => {
@@ -104,13 +108,13 @@ function trayIcon() {
 
 function createTray() {
   tray = new Tray(trayIcon());
-  tray.setToolTip('Zones');
+  tray.setToolTip('DeskRanger');
   tray.setContextMenu(Menu.buildFromTemplate([
     { label: 'Rechercher…', accelerator: SHORTCUTS.search, click: openSearch },
     { label: 'Mode édition', accelerator: SHORTCUTS.edit, click: () => { bringToFront(); send('mode:toggle-edit'); } },
     { label: 'Afficher / masquer les zones', accelerator: SHORTCUTS.toggle, click: () => send('fences:toggle') },
     { type: 'separator' },
-    { label: 'Quitter Zones', click: () => app.quit() },
+    { label: 'Quitter DeskRanger', click: () => app.quit() },
   ]));
   tray.on('click', () => { bringToFront(); send('mode:toggle-edit'); });
 }
@@ -124,7 +128,7 @@ function registerShortcuts() {
   for (const [action, candidates] of Object.entries(SHORTCUT_CANDIDATES)) {
     const free = candidates.find((accel) => globalShortcut.register(accel, handlers[action]));
     if (free) SHORTCUTS[action] = free;
-    else console.warn(`[zones] aucun raccourci libre pour « ${action} » : ${candidates.join(', ')}`);
+    else console.warn(`[deskranger] aucun raccourci libre pour « ${action} » : ${candidates.join(', ')}`);
   }
 }
 
