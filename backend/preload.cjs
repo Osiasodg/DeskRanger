@@ -24,6 +24,9 @@ contextBridge.exposeInMainWorld('api', {
   search: (q) => ipcRenderer.invoke('search:query', q),
   reindex: () => ipcRenderer.invoke('search:reindex'),
 
+  syncDesktop: (paths, enabled) => ipcRenderer.invoke('desktop:sync', paths, enabled),
+  syncDesktopElevated: (items) => ipcRenderer.invoke('desktop:sync-elevated', items),
+
   shortcuts: () => ipcRenderer.invoke('app:shortcuts'),
   quit: () => ipcRenderer.send('app:quit'),
 

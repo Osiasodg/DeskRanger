@@ -26,7 +26,9 @@ export default function Dock({ state, actions, openMenu, prompt, confirm, onNewF
   ]);
 
   const settingsMenu = (e) => openMenu(e, [
-    { label: `${check(settings.hideDesktopIcons)}Masquer les icônes Windows du bureau`, onClick: () => actions.updateSettings({ hideDesktopIcons: !settings.hideDesktopIcons }) },
+    { label: `${check(settings.hideZonedItems)}Retirer du bureau les éléments rangés`, onClick: () => actions.updateSettings({ hideZonedItems: !settings.hideZonedItems }) },
+    { label: `${check(settings.hideDesktopIcons)}Masquer toutes les icônes du bureau`, onClick: () => actions.updateSettings({ hideDesktopIcons: !settings.hideDesktopIcons }) },
+    '-',
     { label: `${check(settings.alwaysOnTop)}Toujours au premier plan`, onClick: () => actions.updateSettings({ alwaysOnTop: !settings.alwaysOnTop }) },
     { label: `${check(settings.singleClick)}Ouvrir en un seul clic`, onClick: () => actions.updateSettings({ singleClick: !settings.singleClick }) },
     { label: `${check(settings.openAtLogin)}Lancer avec Windows`, onClick: () => actions.updateSettings({ openAtLogin: !settings.openAtLogin }) },

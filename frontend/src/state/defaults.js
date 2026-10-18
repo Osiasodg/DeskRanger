@@ -71,7 +71,14 @@ export function defaultState() {
   return {
     version: 1,
     firstRun: true,
-    settings: { alwaysOnTop: false, openAtLogin: false, singleClick: false, hideDesktopIcons: false },
+    settings: {
+      alwaysOnTop: false,
+      openAtLogin: false,
+      singleClick: false,
+      hideDesktopIcons: false,
+      // Un élément rangé dans une zone disparaît du bureau (attribut « caché », fichier non déplacé).
+      hideZonedItems: true,
+    },
     usage: {},
     activeProfile: main.id,
     profiles: [main],

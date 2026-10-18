@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { api } from './lib/api.js';
 import { pathsFromDrop } from './lib/drag.js';
 import { fenceGeometry, findFreeSpot, snap } from './lib/geometry.js';
@@ -67,6 +67,42 @@ export default function App() {
   useEffect(() => {
     api.watchFolders(folderKey ? folderKey.split('\n') : []);
   }, [folderKey]);
+
+  // Les éléments rangés dans une zone (tous bureaux confondus) disparaissent du bureau Windows.
+  const zonedKey = state
+    ? JSON.stringify([
+      !!state.settings.hideZonedItems,
+      ...new Set(state.profiles.flatMap((p) => p.fences.flatMap((f) => (f.type === 'items' ? f.items.map((it) => it.path) : [])))),
+    ])
+    : '';
+  const elevationAsked = useRef(false);
+  useEffect(() => {
+    if (!zonedKey) return undefined;
+    const [enabled, ...paths] = JSON.parse(zonedKey);
+    const timer = setTimeout(async () => {
+      const { failed } = await api.syncDesktop(paths, enabled);
+      if (!failed.length || elevationAsked.current) return;
+      // Le bureau public (partagé entre comptes) n'est modifiable qu'avec les droits administrateur.
+      elevationAsked.current = true;
+      const action = failed.some((f) => f.hide) ? 'masquer' : 'réafficher';
+      setDialog({
+        title: 'Autorisation Windows nécessaire',
+        message: `${failed.length} élément${failed.length > 1 ? 's' : ''} (${failed.slice(0, 3).map((f) => displayName(f.path)).join(', ')}${failed.length > 3 ? '…' : ''}) `
+          + `se trouvent sur le bureau commun à tous les comptes Windows. Pour les ${action}, Windows va demander `
+          + 'votre autorisation administrateur.',
+        confirmLabel: 'Autoriser',
+        onSubmit: async () => {
+          const result = await api.syncDesktopElevated(failed);
+          toast(result.failed
+            ? `${result.done} élément(s) traité(s), ${result.failed} refusé(s) par Windows`
+            : `${result.done} élément${result.done > 1 ? 's' : ''} du bureau commun ${action === 'masquer' ? 'masqué' : 'réaffiché'}${result.done > 1 ? 's' : ''}`);
+        },
+      });
+    }, 600);
+    return () => clearTimeout(timer);
+  }, [zonedKey, toast]);
+  // Réactiver l'option permet de redemander l'autorisation refusée plus tôt.
+  useEffect(() => { elevationAsked.current = false; }, [state?.settings.hideZonedItems]);
 
   const captureAll = editMode || searchOpen || creating || helpOpen || !!menu || !!dialog || !!settingsFor || !!state?.firstRun;
 

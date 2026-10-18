@@ -1,7 +1,7 @@
 {
   "name": "deskranger",
   "productName": "DeskRanger",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Zones semi-transparentes pour organiser le bureau Windows (raccourcis, dossiers, recherche).",
   "author": "Saïd Osias Ouedraogo",
   "repository": "https://github.com/Osiasodg/DeskRanger",

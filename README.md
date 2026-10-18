@@ -10,6 +10,12 @@ Electron + React + Vite.
 Au premier lancement, Windows peut afficher « Windows a protégé votre ordinateur » car l'application
 n'est pas signée : cliquez sur **Informations complémentaires** → **Exécuter quand même**.
 
+**Avast / AVG :** leur « bac à sable automatique » enferme les programmes non signés ; l'installation
+semble alors bloquée, sans fenêtre. Ajoutez deux exceptions (Avast → Menu → Paramètres → Général →
+Exceptions) : le fichier d'installation téléchargé, et le dossier de l'application installée
+`%LOCALAPPDATA%\Programs\DeskRanger\*`. Fermez l'installation bloquée dans le Gestionnaire des tâches,
+puis relancez-la.
+
 ## Lancer depuis le code source
 
 ```bash
@@ -48,8 +54,11 @@ Sous Windows, on peut aussi double-cliquer sur `lancer.bat`.
   Puis Suppr (retirer), Entrée (ouvrir), glisser vers une autre zone, ou clic droit.
 - **Vider une zone** : clic droit sur la zone ou ⋯ → « Vider la zone » (les fichiers restent intacts).
 - **Reste visible avec Win+D** (« Afficher le bureau ») : la fenêtre est rattachée au bureau Windows.
-- **Masquer les icônes Windows du bureau** (⚙ en mode édition) : seules les zones restent ;
-  les icônes réapparaissent quand on quitte DeskRanger.
+- **Les éléments rangés disparaissent du bureau** : un élément placé dans une zone n'est plus visible
+  sur le bureau Windows (attribut « caché », le fichier ne bouge pas) et réapparaît dès qu'on le retire
+  des zones. Les raccourcis du bureau commun à tous les comptes demandent une autorisation administrateur.
+- **Masquer toutes les icônes du bureau** (⚙ en mode édition), y compris celles rangées dans aucune zone ;
+  elles réapparaissent quand on quitte DeskRanger.
 - Vraies icônes Windows en haute définition, identiques à l'Explorateur (`backend/shellIcon.cjs`),
   et vignettes pour les images.
 
@@ -73,7 +82,8 @@ via `backend/preload.cjs`, qui expose `window.api` à l'interface.
 backend/                  processus Electron (Node.js)
   main.cjs                fenêtre transparente plein écran, icône de notification, raccourcis, IPC
   preload.cjs             pont sécurisé window.api vers le frontend
-  desktop.cjs             intégration au bureau (arrière-plan, masquage des icônes) via koffi
+  desktop.cjs             intégration au bureau (arrière-plan, Win+D, masquage des icônes) via koffi
+  desktopItems.cjs        retire du bureau les éléments rangés (attribut « caché ») et les y remet
   shellIcon.cjs           icônes Windows haute définition
   files.cjs               ouverture, listing et surveillance de dossiers, fichiers récents
   search.cjs              index de recherche (menu Démarrer + dossiers personnels)

@@ -17,6 +17,8 @@ const browserStub = {
   desktopFiles: async () => [],
   search: async () => ({ results: [], indexing: false, total: 0 }),
   reindex: async () => {},
+  syncDesktop: async () => ({ failed: [], hidden: 0 }),
+  syncDesktopElevated: async () => ({ done: 0, failed: 0 }),
   shortcuts: async () => ({ search: 'Control+Alt+Space', edit: 'Control+Alt+E', toggle: 'Control+Alt+H' }),
   quit: () => {},
   on: () => () => {},

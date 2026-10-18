@@ -4,6 +4,7 @@ const store = require('./store.cjs');
 const files = require('./files.cjs');
 const search = require('./search.cjs');
 const desktop = require('./desktop.cjs');
+const desktopItems = require('./desktopItems.cjs');
 
 const isDev = process.argv.includes('--dev');
 // Pour chaque action, la première combinaison libre sur le PC est retenue.
@@ -178,6 +179,9 @@ function registerIpc() {
 
   ipcMain.handle('search:query', (_e, q) => search.query(q));
   ipcMain.handle('search:reindex', () => search.rebuild());
+
+  ipcMain.handle('desktop:sync', (_e, paths, enabled) => desktopItems.sync(paths, enabled));
+  ipcMain.handle('desktop:sync-elevated', (_e, items) => desktopItems.syncElevated(items));
 
   ipcMain.handle('app:shortcuts', () => SHORTCUTS);
   ipcMain.on('app:quit', () => app.quit());

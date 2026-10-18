@@ -87,7 +87,7 @@ const SECTIONS = [
   {
     id: 'add',
     title: 'Ajouter des applis, fichiers et dossiers',
-    keywords: 'ajouter glisser déposer drag raccourci icône épingler',
+    keywords: 'ajouter glisser déposer drag raccourci icône épingler disparaît bureau caché masquer',
     body: () => (
       <>
         <h4>Par glisser-déposer</h4>
@@ -105,6 +105,14 @@ const SECTIONS = [
           et retirer un élément d’une zone ne supprime jamais le fichier. Chaque élément garde sa
           <strong> vraie icône Windows</strong> en haute définition ; les images affichent un aperçu.
           Un même élément n’est jamais ajouté deux fois dans la même zone.</p>
+        <h4>L’élément disparaît du bureau</h4>
+        <p>Un élément du bureau rangé dans une zone <strong>n’apparaît plus sur le bureau Windows</strong> :
+          il n’est visible que dans sa zone. Le fichier n’est pas déplacé, DeskRanger le marque simplement
+          comme « caché ». Dès que vous le retirez de toutes les zones, il réapparaît sur le bureau.
+          Les éléments rangés dans aucune zone restent visibles normalement.</p>
+        <p>Certains raccourcis (souvent les navigateurs, Acrobat, Zoom…) sont sur le <strong>bureau commun
+          à tous les comptes Windows</strong> : pour ceux-là, Windows demande une fois votre autorisation administrateur.
+          Si vous refusez, ils restent simplement visibles sur le bureau.</p>
       </>
     ),
   },
@@ -201,9 +209,9 @@ const SECTIONS = [
         </ul>
         <p>Exemple : une zone « Cours » avec la règle <code>cours td examen</code> récupère tous les fichiers dont le
           nom contient l’un de ces mots.</p>
-        <p className="help-note">Rien n’est déplacé sur le disque : les éléments restent sur le bureau, les zones
-          contiennent des liens. Pour ne plus voir les icônes d’origine, voir « Masquer les icônes Windows » dans
-          les réglages.</p>
+        <p className="help-note">Rien n’est déplacé sur le disque : les zones contiennent des liens, et les éléments
+          rangés disparaissent simplement du bureau Windows (ils y reviennent si vous les retirez des zones).
+          Après un rangement complet, votre bureau est donc propre.</p>
       </>
     ),
   },
@@ -285,9 +293,11 @@ const SECTIONS = [
       <>
         <p>Mode édition → <strong>⚙</strong> :</p>
         <ul>
-          <li><strong>Masquer les icônes Windows du bureau</strong> : seules vos zones restent visibles, comme avec Fences.
-            Les icônes réapparaissent quand vous quittez DeskRanger. Attention : les éléments rangés dans aucune zone
-            deviennent invisibles ; utilisez ✦ ou une zone « Dossier en direct » sur votre Bureau.</li>
+          <li><strong>Retirer du bureau les éléments rangés</strong> (activé par défaut) : un élément placé dans une
+            zone disparaît du bureau Windows ; les autres restent visibles. Décochez pour que tout réapparaisse.</li>
+          <li><strong>Masquer toutes les icônes du bureau</strong> : cache d’un coup <em>toutes</em> les icônes Windows,
+            même celles rangées dans aucune zone (comme le clic droit → Affichage de Windows). Elles réapparaissent
+            quand vous quittez DeskRanger.</li>
           <li><strong>Toujours au premier plan</strong> : les zones restent au-dessus de toutes les fenêtres.</li>
           <li><strong>Ouvrir en un seul clic</strong> au lieu du double-clic.</li>
           <li><strong>Lancer avec Windows</strong> (version installée uniquement).</li>
@@ -333,7 +343,13 @@ const SECTIONS = [
         <h4>Un élément ne s’ouvre plus</h4>
         <p>Le fichier a sans doute été déplacé ou supprimé. Retirez-le de la zone et ajoutez-le à nouveau.</p>
         <h4>Est-ce que DeskRanger peut supprimer mes fichiers ?</h4>
-        <p>Non. Il ne déplace, ne renomme et ne supprime jamais rien sur le disque : les zones ne contiennent que des liens.</p>
+        <p>Non. Il ne déplace, ne renomme et ne supprime jamais rien sur le disque : les zones ne contiennent que des liens.
+          Il se contente de marquer comme « cachés » les éléments du bureau rangés dans une zone.</p>
+        <h4>Un fichier a disparu de mon bureau</h4>
+        <p>Il est rangé dans une zone : cherchez-le avec la recherche. Pour le remettre sur le bureau, retirez-le de la zone,
+          ou décochez « Retirer du bureau les éléments rangés » (mode édition → ⚙) pour tout faire réapparaître.
+          Si vous avez activé « Afficher les éléments masqués » dans l’Explorateur, les éléments rangés restent visibles
+          en semi-transparent.</p>
         <h4>Où sont enregistrées mes zones ?</h4>
         <p>Dans <code>%APPDATA%\DeskRanger\layout.json</code>, enregistré automatiquement à chaque changement.</p>
         <h4>Les icônes du bureau ne réapparaissent pas</h4>
