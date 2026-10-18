@@ -300,7 +300,9 @@ const SECTIONS = [
             quand vous quittez DeskRanger.</li>
           <li><strong>Toujours au premier plan</strong> : les zones restent au-dessus de toutes les fenêtres.</li>
           <li><strong>Ouvrir en un seul clic</strong> au lieu du double-clic.</li>
-          <li><strong>Lancer avec Windows</strong> (version installée uniquement).</li>
+          <li><strong>Lancer avec Windows</strong> (activé par défaut, version installée uniquement) : vos zones sont là
+            dès le démarrage. Si vous le désactivez, pensez à lancer DeskRanger vous-même, sinon les éléments rangés
+            restent cachés du bureau.</li>
           <li><strong>Réindexer la recherche</strong>.</li>
           <li><strong>Quitter DeskRanger</strong>.</li>
         </ul>
@@ -345,6 +347,10 @@ const SECTIONS = [
         <h4>Est-ce que DeskRanger peut supprimer mes fichiers ?</h4>
         <p>Non. Il ne déplace, ne renomme et ne supprime jamais rien sur le disque : les zones ne contiennent que des liens.
           Il se contente de marquer comme « cachés » les éléments du bureau rangés dans une zone.</p>
+        <h4>Après un redémarrage, je ne vois plus mes zones</h4>
+        <p>DeskRanger n’est pas lancé. Ouvrez-le depuis le menu Démarrer, et vérifiez que « Lancer avec Windows » est coché
+          (mode édition → ⚙). Quand vous quittez DeskRanger vous-même, les éléments rangés réapparaissent sur le bureau
+          (sauf ceux du bureau commun à tous les comptes).</p>
         <h4>Un fichier a disparu de mon bureau</h4>
         <p>Il est rangé dans une zone : cherchez-le avec la recherche. Pour le remettre sur le bureau, retirez-le de la zone,
           ou décochez « Retirer du bureau les éléments rangés » (mode édition → ⚙) pour tout faire réapparaître.

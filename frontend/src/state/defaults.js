@@ -73,7 +73,9 @@ export function defaultState() {
     firstRun: true,
     settings: {
       alwaysOnTop: false,
-      openAtLogin: false,
+      // Sans DeskRanger, les éléments rangés restent cachés du bureau : il doit démarrer avec Windows.
+      openAtLogin: true,
+      openAtLoginDefaulted: true,
       singleClick: false,
       hideDesktopIcons: false,
       // Un élément rangé dans une zone disparaît du bureau (attribut « caché », fichier non déplacé).
@@ -92,10 +94,13 @@ export function migrate(saved) {
     ...p,
     fences: (p.fences ?? []).map((f) => ({ ...createFence(f.type ?? 'items'), ...f })),
   }));
+  const settings = { ...base.settings, ...saved.settings };
+  // Les versions ≤ 0.2.0 démarraient sans Windows par défaut : on active le démarrage une seule fois.
+  if (!saved.settings?.openAtLoginDefaulted) Object.assign(settings, { openAtLogin: true, openAtLoginDefaulted: true });
   return {
     ...base,
     ...saved,
-    settings: { ...base.settings, ...saved.settings },
+    settings,
     usage: saved.usage ?? {},
     profiles,
     activeProfile: profiles.some((p) => p.id === saved.activeProfile) ? saved.activeProfile : profiles[0].id,

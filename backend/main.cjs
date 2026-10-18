@@ -22,6 +22,7 @@ let tray = null;
 let alwaysOnTop = false;
 // On ne réaffiche en quittant que les icônes que l'application a elle-même masquées.
 let iconsHiddenByUs = false;
+let sessionEnding = false;
 
 function send(channel, ...args) {
   if (win && !win.isDestroyed()) win.webContents.send(channel, ...args);
@@ -73,6 +74,10 @@ function createWindow() {
     if (!alwaysOnTop) desktop.sendToBack(win);
     // Si l'Explorateur redémarre, le bureau change de fenêtre : on s'y rattache à nouveau.
     setInterval(() => desktop.attachToDesktop(win), DESKTOP_REATTACH_MS);
+  });
+  // Fermeture de session ou arrêt de Windows (et non « Quitter DeskRanger »).
+  win.on('session-end', () => {
+    sessionEnding = true;
   });
   // Quand on clique ailleurs, les zones retournent derrière les autres fenêtres.
   win.on('blur', () => {
@@ -204,6 +209,10 @@ if (!app.requestSingleInstanceLock()) {
   app.on('will-quit', () => {
     globalShortcut.unregisterAll();
     if (iconsHiddenByUs) desktop.setDesktopIconsHidden(false);
+    // Quitter DeskRanger remet sur le bureau les éléments rangés (sauf ceux du bureau commun, qui
+    // demanderaient une autorisation administrateur) : sans zones, ils seraient introuvables.
+    // À l'arrêt de Windows on les laisse cachés : DeskRanger revient au démarrage.
+    if (!sessionEnding) desktopItems.sync([], false);
   });
   app.on('window-all-closed', () => app.quit());
 }
