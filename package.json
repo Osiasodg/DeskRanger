@@ -1,0 +1,55 @@
+{
+  "name": "zones-bureau",
+  "productName": "Zones",
+  "version": "0.1.0",
+  "description": "Zones semi-transparentes pour organiser le bureau Windows (raccourcis, dossiers, recherche).",
+  "private": true,
+  "type": "module",
+  "main": "backend/main.cjs",
+  "scripts": {
+    "dev": "concurrently -k -n vite,electron -c cyan,magenta \"vite\" \"wait-on tcp:127.0.0.1:5173 && node scripts/run-electron.cjs --dev\"",
+    "build": "vite build",
+    "start": "vite build && node scripts/run-electron.cjs",
+    "dist": "vite build && electron-builder --win"
+  },
+  "dependencies": {
+    "koffi": "^2.9.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "concurrently": "^9.1.0",
+    "electron": "^33.2.1",
+    "electron-builder": "^25.1.8",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "vite": "^5.4.11",
+    "wait-on": "^8.0.1"
+  },
+  "build": {
+    "appId": "fr.zones.bureau",
+    "productName": "Zones",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "backend/**/*",
+      "package.json"
+    ],
+    "asarUnpack": [
+      "node_modules/koffi/**"
+    ],
+    "win": {
+      "target": "nsis"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  },
+  "allowScripts": {
+    "electron@33.4.11": true,
+    "koffi@2.16.3": true,
+    "esbuild@0.21.5": true
+  }
+}
