@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react';
-import { api } from '../lib/api.js';
+import { useShortcuts } from '../hooks/useShortcuts.js';
 
 const ACTIONS = [
   ['search', 'Rechercher partout (applis, fichiers, zones)'],
@@ -7,13 +6,8 @@ const ACTIONS = [
   ['toggle', 'Masquer / afficher toutes les zones'],
 ];
 
-const KEY_NAMES = { Control: 'Ctrl', Space: 'Espace' };
-const formatAccelerator = (accel) => accel.split('+').map((k) => KEY_NAMES[k] ?? k).join(' + ');
-
-export default function Welcome({ onClose }) {
-  const [shortcuts, setShortcuts] = useState({});
-
-  useEffect(() => { api.shortcuts().then(setShortcuts); }, []);
+export default function Welcome({ onClose, onHelp }) {
+  const shortcut = useShortcuts();
 
   return (
     <div className="modal-backdrop hit">
@@ -23,16 +17,14 @@ export default function Welcome({ onClose }) {
           fichiers et dossiers. Déplacez une zone par son titre, renommez-la d’un double-clic.</p>
         <ul className="shortcut-list">
           {ACTIONS.map(([action, label]) => (
-            <li key={action}>
-              <kbd>{shortcuts[action] ? formatAccelerator(shortcuts[action]) : 'indisponible'}</kbd>
-              <span>{label}</span>
-            </li>
+            <li key={action}><kbd>{shortcut(action)}</kbd><span>{label}</span></li>
           ))}
+          <li><kbd>F1</kbd><span>Aide complète, à tout moment (ou bouton ? en bas à droite)</span></li>
         </ul>
-        <p className="muted">Astuce : en mode édition, déposez des fichiers dans le vide pour créer une zone,
-          et utilisez « Ranger le bureau » pour classer automatiquement vos icônes. L’icône DeskRanger dans la zone
-          de notification donne accès à tout.</p>
+        <p className="muted">Astuce : le bouton ✦ range automatiquement tout votre bureau dans des zones.
+          L’icône DeskRanger dans la zone de notification donne accès à tout.</p>
         <div className="dialog-actions">
+          <button className="btn" onClick={() => { onClose(); onHelp(); }}>Lire l’aide</button>
           <button className="btn primary" autoFocus onClick={onClose}>C’est parti</button>
         </div>
       </div>

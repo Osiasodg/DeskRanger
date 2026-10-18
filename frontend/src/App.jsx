@@ -16,6 +16,7 @@ import Dialog from './components/Dialog.jsx';
 import Welcome from './components/Welcome.jsx';
 import Toasts from './components/Toasts.jsx';
 import QuickBar from './components/QuickBar.jsx';
+import Help from './components/Help.jsx';
 
 const NO_SELECTION = { fenceId: null, ids: [], anchor: null };
 
@@ -40,6 +41,7 @@ export default function App() {
   const [dialog, setDialog] = useState(null);
   const [settingsFor, setSettingsFor] = useState(null);
   const [creating, setCreating] = useState(false);
+  const [helpOpen, setHelpOpen] = useState(false);
   const [selection, setSelection] = useState(NO_SELECTION);
   const { toasts, toast } = useToasts();
 
@@ -48,6 +50,7 @@ export default function App() {
       api.on('mode:toggle-edit', () => setEditMode((v) => !v)),
       api.on('fences:toggle', () => setVisible((v) => !v)),
       api.on('search:open', () => setSearchOpen(true)),
+      api.on('help:open', () => setHelpOpen(true)),
     ];
     return () => offs.forEach((off) => off());
   }, []);
@@ -65,15 +68,27 @@ export default function App() {
     api.watchFolders(folderKey ? folderKey.split('\n') : []);
   }, [folderKey]);
 
-  const captureAll = editMode || searchOpen || creating || !!menu || !!dialog || !!settingsFor || !!state?.firstRun;
+  const captureAll = editMode || searchOpen || creating || helpOpen || !!menu || !!dialog || !!settingsFor || !!state?.firstRun;
+
+  // F1 ouvre l'aide quand la fenêtre des zones a le focus.
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key !== 'F1') return;
+      e.preventDefault();
+      setHelpOpen(true);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
+  useEffect(() => { if (helpOpen) api.focusWindow(); }, [helpOpen]);
   useClickThrough(captureAll);
 
   useEffect(() => {
-    if (!editMode || menu || dialog || settingsFor || searchOpen || selection.ids.length) return undefined;
+    if (!editMode || menu || dialog || settingsFor || searchOpen || helpOpen || selection.ids.length) return undefined;
     const onKey = (e) => e.key === 'Escape' && setEditMode(false);
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [editMode, menu, dialog, settingsFor, searchOpen, selection]);
+  }, [editMode, menu, dialog, settingsFor, searchOpen, helpOpen, selection]);
 
   // Quand on clique ailleurs que dans les zones, la sélection est abandonnée.
   useEffect(() => {
@@ -84,7 +99,7 @@ export default function App() {
   useEffect(() => setSelection(NO_SELECTION), [state?.activeProfile]);
 
   // Raccourcis clavier sur la sélection : Suppr, Entrée, Ctrl+A, Échap.
-  const overlayOpen = !!menu || !!dialog || !!settingsFor || searchOpen || creating;
+  const overlayOpen = !!menu || !!dialog || !!settingsFor || searchOpen || creating || helpOpen;
   useEffect(() => {
     if (!selection.ids.length || overlayOpen || !profile) return undefined;
     const fence = profile.fences.find((f) => f.id === selection.fenceId);
@@ -356,6 +371,7 @@ export default function App() {
           onNewFence={(type) => newFence(type)}
           onAutoSort={autoSort}
           onSearch={() => setSearchOpen(true)}
+          onHelp={() => setHelpOpen(true)}
           onExit={() => setEditMode(false)}
         />
       )}
@@ -368,6 +384,7 @@ export default function App() {
           onAutoSort={autoSort}
           onSearch={() => setSearchOpen(true)}
           onEdit={() => setEditMode(true)}
+          onHelp={() => setHelpOpen(true)}
         />
       )}
 
@@ -398,7 +415,8 @@ export default function App() {
 
       {menu && <ContextMenu {...menu} onClose={() => setMenu(null)} />}
       {dialog && <Dialog {...dialog} onClose={() => setDialog(null)} />}
-      {state.firstRun && <Welcome onClose={actions.dismissWelcome} />}
+      {state.firstRun && <Welcome onClose={actions.dismissWelcome} onHelp={() => setHelpOpen(true)} />}
+      {helpOpen && <Help onClose={() => setHelpOpen(false)} />}
       <Toasts toasts={toasts} />
     </div>
   );

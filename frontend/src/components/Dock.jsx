@@ -1,6 +1,6 @@
 import Icon from './Icons.jsx';
 
-export default function Dock({ state, actions, openMenu, prompt, confirm, onNewFence, onAutoSort, onSearch, onExit }) {
+export default function Dock({ state, actions, openMenu, prompt, confirm, onNewFence, onAutoSort, onSearch, onHelp, onExit }) {
   const { settings } = state;
   const check = (on) => (on ? '✓  ' : '      ');
 
@@ -62,6 +62,7 @@ export default function Dock({ state, actions, openMenu, prompt, confirm, onNewF
         <Icon name="sparkle" size={14} /> Ranger le bureau
       </button>
       <button className="btn" onClick={onSearch}><Icon name="search" size={14} /> Rechercher</button>
+      <button className="btn icon-only" onClick={onHelp} title="Aide (F1)"><Icon name="help" size={15} /></button>
       <button className="btn icon-only" onClick={settingsMenu} title="Réglages"><Icon name="gear" size={15} /></button>
       <button className="btn primary" onClick={onExit}><Icon name="check" size={14} /> Terminer</button>
     </div>

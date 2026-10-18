@@ -1,6 +1,6 @@
 const { contextBridge, ipcRenderer, webUtils } = require('electron');
 
-const EVENTS = new Set(['mode:toggle-edit', 'fences:toggle', 'search:open', 'folder:changed']);
+const EVENTS = new Set(['mode:toggle-edit', 'fences:toggle', 'search:open', 'help:open', 'folder:changed']);
 
 contextBridge.exposeInMainWorld('api', {
   loadState: () => ipcRenderer.invoke('state:load'),

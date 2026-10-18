@@ -10,6 +10,7 @@ const PATHS = {
   pin: 'M9 4h6l-1 6 4 3v2H6v-2l4-3zM12 15v6',
   check: 'M5 12l5 5 9-10',
   edit: 'M4 20h4L19 9l-4-4L4 16zM14 6l4 4',
+  help: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6v.6M12 17h.01',
 };
 
 /** Icône de dossier façon Windows 11, utilisée pour tous les dossiers. */

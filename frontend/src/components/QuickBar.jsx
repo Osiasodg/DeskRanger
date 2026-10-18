@@ -48,7 +48,7 @@ function CreatePanel({ onCreate, onClose }) {
 }
 
 /** Petite barre toujours visible en bas à droite : créer une zone, ranger, rechercher, mode édition. */
-export default function QuickBar({ creating, setCreating, onCreate, onAutoSort, onSearch, onEdit }) {
+export default function QuickBar({ creating, setCreating, onCreate, onAutoSort, onSearch, onEdit, onHelp }) {
   return (
     <>
       {creating && <CreatePanel onCreate={onCreate} onClose={() => setCreating(false)} />}
@@ -64,6 +64,9 @@ export default function QuickBar({ creating, setCreating, onCreate, onAutoSort, 
         </button>
         <button className="qb-btn" title="Mode édition (organiser les zones)" onClick={onEdit}>
           <Icon name="edit" size={16} />
+        </button>
+        <button className="qb-btn" title="Aide (F1)" onClick={onHelp}>
+          <Icon name="help" size={16} />
         </button>
       </div>
     </>

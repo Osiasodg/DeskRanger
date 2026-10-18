@@ -113,6 +113,7 @@ function createTray() {
     { label: 'Rechercher…', accelerator: SHORTCUTS.search, click: openSearch },
     { label: 'Mode édition', accelerator: SHORTCUTS.edit, click: () => { bringToFront(); send('mode:toggle-edit'); } },
     { label: 'Afficher / masquer les zones', accelerator: SHORTCUTS.toggle, click: () => send('fences:toggle') },
+    { label: 'Aide', click: () => { bringToFront(); send('help:open'); } },
     { type: 'separator' },
     { label: 'Quitter DeskRanger', click: () => app.quit() },
   ]));

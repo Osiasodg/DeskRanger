@@ -19,6 +19,9 @@ Sous Windows, on peut aussi double-cliquer sur `lancer.bat`.
 
 ## Fonctionnalités
 
+> Une **aide complète** est intégrée à l'application : touche **F1**, bouton **?** en bas à droite,
+> ou menu de l'icône de notification → « Aide ».
+
 - **Zones** déplaçables (par le titre), redimensionnables (coin bas-droit), renommables (double-clic),
   repliables : une zone repliée se déroule au survol.
 - **Personnalisation** (bouton ⋯) : couleur de fond, couleur d'accent, opacité, taille des icônes, arrondi, tri.
