@@ -347,6 +347,9 @@ const SECTIONS = [
         <h4>Est-ce que DeskRanger peut supprimer mes fichiers ?</h4>
         <p>Non. Il ne déplace, ne renomme et ne supprime jamais rien sur le disque : les zones ne contiennent que des liens.
           Il se contente de marquer comme « cachés » les éléments du bureau rangés dans une zone.</p>
+        <h4>Si je désinstalle DeskRanger ?</h4>
+        <p>La désinstallation remet automatiquement sur le bureau tous les éléments rangés dans des zones, et retire
+          DeskRanger du démarrage de Windows. Vos fichiers restent exactement où ils étaient.</p>
         <h4>Après un redémarrage, je ne vois plus mes zones</h4>
         <p>DeskRanger n’est pas lancé. Ouvrez-le depuis le menu Démarrer, et vérifiez que « Lancer avec Windows » est coché
           (mode édition → ⚙). Quand vous quittez DeskRanger vous-même, les éléments rangés réapparaissent sur le bureau

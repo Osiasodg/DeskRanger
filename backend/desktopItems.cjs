@@ -43,7 +43,9 @@ let registry = null;
 function loadRegistry() {
   if (registry) return registry;
   try {
-    registry = new Map(JSON.parse(fs.readFileSync(registryPath(), 'utf8')).map((p) => [p.toLowerCase(), p]));
+    // Le script de restauration (PowerShell) peut avoir réécrit le fichier avec un BOM.
+    const text = fs.readFileSync(registryPath(), 'utf8').replace(/^﻿/, '');
+    registry = new Map([].concat(JSON.parse(text)).map((p) => [p.toLowerCase(), p]));
   } catch {
     registry = new Map();
   }
@@ -155,4 +157,38 @@ function syncElevated(items) {
   });
 }
 
-module.exports = { sync, syncElevated };
+// Script exécuté par le désinstalleur (build/installer.nsh) : réaffiche tout ce que DeskRanger a
+// caché, même une fois l'application supprimée. Les éléments du bureau commun sont traités dans
+// un second passage avec les droits administrateur (UAC), seulement s'il en reste.
+const RESTORE_SCRIPT = `param([switch]$Elevated)
+$registry = Join-Path $PSScriptRoot 'hidden-desktop-items.json'
+if (-not (Test-Path -LiteralPath $registry)) { exit 0 }
+# Pas de @(...) ici : sous PowerShell 5, ConvertFrom-Json émet le tableau d'un bloc et @() l'emballerait.
+$items = Get-Content -Raw -Encoding UTF8 -LiteralPath $registry | ConvertFrom-Json
+$left = @()
+foreach ($p in $items) {
+  try {
+    $f = Get-Item -LiteralPath $p -Force -ErrorAction Stop
+    $f.Attributes = $f.Attributes -band (-bnot [IO.FileAttributes]::Hidden)
+  } catch [System.Management.Automation.ItemNotFoundException] {
+  } catch { $left += $p }
+}
+if ($left.Count -and -not $Elevated) {
+  $left | ConvertTo-Json | Set-Content -Encoding UTF8 -LiteralPath $registry
+  try { Start-Process powershell -Verb RunAs -Wait -WindowStyle Hidden -ArgumentList '-NoProfile','-ExecutionPolicy','Bypass','-File',('"' + $PSCommandPath + '"'),'-Elevated' } catch {}
+  exit 0
+}
+Set-Content -Encoding ASCII -LiteralPath $registry -Value '[]'
+`;
+
+function writeRestoreScript() {
+  try {
+    const file = path.join(app.getPath('userData'), 'restore-desktop.ps1');
+    fs.mkdirSync(path.dirname(file), { recursive: true });
+    fs.writeFileSync(file, `﻿${RESTORE_SCRIPT}`, 'utf8');
+  } catch (err) {
+    console.error('[deskranger] script de restauration non écrit :', err);
+  }
+}
+
+module.exports = { sync, syncElevated, writeRestoreScript };

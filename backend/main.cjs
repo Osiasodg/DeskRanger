@@ -200,6 +200,7 @@ if (!app.requestSingleInstanceLock()) {
   app.whenReady().then(() => {
     registerIpc();
     registerShortcuts();
+    desktopItems.writeRestoreScript();
     createWindow();
     createTray();
     setTimeout(() => search.rebuild(), 3000);
